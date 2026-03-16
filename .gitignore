@@ -1,0 +1,70 @@
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+# Node.js
+node_modules/
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+
+# Maven
+target/
+**/target/
+!**/src/main/**/target/
+!**/src/test/**/target/
+dependency-reduced-pom.xml
+buildNumber.properties
+.release.properties
+
+# Spring Boot
+spring-devtools.properties
+
+# JetBrains
+.idea/
+*.iml
+*.iws
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment variables
+*.env
+
