@@ -34,7 +34,7 @@ public class PermissionService {
             actualPermission.setDescription(newPermission.getDescription());
             this.thePermissionRepository.save(actualPermission);
             return actualPermission;
-        }else{
+        } else {
             return null;
         }
     }
@@ -45,5 +45,4 @@ public class PermissionService {
             this.thePermissionRepository.delete(thePermission);
         }
     }
-
 }

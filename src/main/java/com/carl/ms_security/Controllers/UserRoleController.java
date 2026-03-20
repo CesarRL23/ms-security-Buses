@@ -8,13 +8,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+
 @CrossOrigin
 @RestController
 @RequestMapping("/user-role")
 public class UserRoleController {
     @Autowired
     private UserRoleService theUserRoleService;
-
+    // Asignación del endpoint
     @PostMapping("user/{userId}/role/{roleId}")
     public ResponseEntity<Map<String, String>> addUserRole(
             @PathVariable String userId,
@@ -42,18 +43,4 @@ public class UserRoleController {
                     .body(Map.of("message", "User or Role not found"));
         }
     }
-
-    @GetMapping("/user/{userId}/user-roles")
-    public ResponseEntity<?> getUserRoles(@PathVariable String userId){
-        var userRoles = this.theUserRoleService.getUserRoles(userId);
-
-        if(userRoles == null){
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("message","User not found"));
-        }
-
-        return ResponseEntity.ok(userRoles);
-    }
 }
-

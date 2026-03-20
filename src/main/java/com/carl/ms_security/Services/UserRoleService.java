@@ -10,10 +10,9 @@ import com.carl.ms_security.Repositories.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 @Service
-public class    UserRoleService {
+public class UserRoleService {
     @Autowired
     private UserRepository theUserRepository;
 
@@ -23,7 +22,8 @@ public class    UserRoleService {
     @Autowired
     private UserRoleRepository theUserRoleRepository;
 
-    public boolean addUserRole(String userId, String roleId){
+    public boolean addUserRole(String userId,
+                               String roleId){
         User user=this.theUserRepository.findById(userId).orElse(null);
         Role role=this.theRoleRepository.findById(roleId).orElse(null);
         if (user!=null && role!=null){
@@ -43,31 +43,6 @@ public class    UserRoleService {
         }else{
             return false;
         }
-    }
-
-    public List<Role> getRolesByUser(String userId){
-
-        User user = this.theUserRepository.findById(userId).orElse(null);
-
-        if(user == null){
-            return null;
-        }
-
-        List<UserRole> userRoles = this.theUserRoleRepository.findByUser(user);
-
-        return userRoles.stream()
-                .map(UserRole::getRole)
-                .toList();
-    }
-    public List<UserRole> getUserRoles(String userId){
-
-        User user = this.theUserRepository.findById(userId).orElse(null);
-
-        if(user == null){
-            return null;
-        }
-
-        return this.theUserRoleRepository.findByUser(user);
     }
 
 }

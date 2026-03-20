@@ -19,16 +19,18 @@ public class SecurityController {
 
     @PostMapping("login")
     public HashMap<String,Object> login(@RequestBody User theNewUser,
-                                        final HttpServletResponse response)throws IOException {
+                                        final HttpServletResponse response) throws IOException {
+
         HashMap<String, Object> theResponse = new HashMap<>();
-        String token = null;
-        token=this.theSecurityService.login(theNewUser);
+
+        String token = this.theSecurityService.login(theNewUser);
+
         if (token != null) {
             theResponse.put("token", token);
         } else {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-            return theResponse;
         }
+
         return theResponse;
     }
 }

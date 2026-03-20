@@ -9,35 +9,34 @@ import java.util.List;
 
 @CrossOrigin
 @RestController
-@RequestMapping("api/permissions")
+@RequestMapping("/permissions")
 public class PermissionController {
 
     @Autowired
     private PermissionService thePermissionService;
 
     @GetMapping("")
-    public List<Permission> find(){
+    public List<Permission> find() {
         return this.thePermissionService.find();
     }
 
     @GetMapping("{id}")
-    public Permission findById(@PathVariable String id){
+    public Permission findById(@PathVariable String id) {
         return this.thePermissionService.findById(id);
     }
 
     @PostMapping
-    public Permission create(@RequestBody Permission newPermission){
+    public Permission create(@RequestBody Permission newPermission) {
         return this.thePermissionService.create(newPermission);
     }
 
     @PutMapping("{id}")
-    public Permission update(@PathVariable String id, @RequestBody Permission newPermission){
-        return this.thePermissionService.update(id,newPermission);
+    public Permission update(@PathVariable String id, @RequestBody Permission newPermission) {
+        return this.thePermissionService.update(id, newPermission);
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable String id){
+    public void delete(@PathVariable String id) {
         this.thePermissionService.delete(id);
     }
-
 }
