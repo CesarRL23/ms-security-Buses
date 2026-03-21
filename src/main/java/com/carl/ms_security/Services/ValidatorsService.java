@@ -1,10 +1,10 @@
-package com.jdmo.ms_security.Services;
+package com.carl.ms_security.Services;
 
-import com.jdmo.ms_security.Models.*;
-import com.jdmo.ms_security.Repositories.PermissionRepository;
-import com.jdmo.ms_security.Repositories.RolePermissionRepository;
-import com.jdmo.ms_security.Repositories.UserRepository;
-import com.jdmo.ms_security.Repositories.UserRoleRepository;
+import com.carl.ms_security.Models.*;
+import com.carl.ms_security.Repositories.PermissionRepository;
+import com.carl.ms_security.Repositories.RolePermissionRepository;
+import com.carl.ms_security.Repositories.UserRepository;
+import com.carl.ms_security.Repositories.UserRoleRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

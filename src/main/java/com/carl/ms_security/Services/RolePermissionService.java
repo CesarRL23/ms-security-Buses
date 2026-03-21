@@ -1,9 +1,10 @@
-package com.jdmo.ms_security.Services;
+package com.carl.ms_security.Services;
 
-import com.jdmo.ms_security.Models.RolePermission;
-import com.jdmo.ms_security.Repositories.RolePermissionRepository;
+import com.carl.ms_security.Models.RolePermission;
+import com.carl.ms_security.Repositories.RolePermissionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service

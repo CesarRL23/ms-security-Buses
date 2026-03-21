@@ -1,7 +1,7 @@
-package com.jdmo.ms_security.Controllers;
+package com.carl.ms_security.Controllers;
 
-import com.jdmo.ms_security.Models.RolePermission;
-import com.jdmo.ms_security.Services.RolePermissionService;
+import com.carl.ms_security.Models.RolePermission;
+import com.carl.ms_security.Services.RolePermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,6 +1,6 @@
-package com.jdmo.ms_security.Interceptors;
+package com.carl.ms_security.Interceptors;
 
-import com.jdmo.ms_security.Services.ValidatorsService;
+import com.carl.ms_security.Services.ValidatorsService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;

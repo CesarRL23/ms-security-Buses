@@ -1,6 +1,6 @@
-package com.jdmo.ms_security.Configurations;
+package com.carl.ms_security.Configurations;
 
-import com.jdmo.ms_security.Interceptors.SecurityInterceptor;
+import com.carl.ms_security.Interceptors.SecurityInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
