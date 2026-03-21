@@ -13,7 +13,7 @@ import java.util.HashMap;
 @RestController
 @RequestMapping("api/public/security")
 public class SecurityController {
-
+1
     @Autowired
     private SecurityService theSecurityService;
 
