@@ -10,6 +10,8 @@ import com.carl.ms_security.Repositories.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 public class UserRoleService {
@@ -43,6 +45,14 @@ public class UserRoleService {
         }else{
             return false;
         }
+    }
+
+    public List<UserRole> find(){
+        return this.theUserRoleRepository.findAll();
+    }
+
+    public List<UserRole> getRolesByUser(String userId){
+        return this.theUserRoleRepository.getRolesByUser(userId);
     }
 
 }

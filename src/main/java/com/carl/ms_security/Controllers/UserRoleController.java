@@ -1,11 +1,13 @@
 package com.carl.ms_security.Controllers;
 
+import com.carl.ms_security.Models.UserRole;
 import com.carl.ms_security.Services.UserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -15,6 +17,16 @@ import java.util.Map;
 public class UserRoleController {
     @Autowired
     private UserRoleService theUserRoleService;
+
+    @GetMapping("")
+    public List<UserRole> find() {
+        return this.theUserRoleService.find();
+    }
+
+    @GetMapping("user/{userId}")
+    public List<UserRole> getRolesByUser(@PathVariable String userId) {
+        return this.theUserRoleService.getRolesByUser(userId);
+    }
     // Asignación del endpoint
     @PostMapping("user/{userId}/role/{roleId}")
     public ResponseEntity<Map<String, String>> addUserRole(

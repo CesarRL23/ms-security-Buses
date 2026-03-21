@@ -17,6 +17,10 @@ public class SecurityInterceptor implements HandlerInterceptor {
                              HttpServletResponse response,
                              Object handler)
             throws Exception {
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            return true;
+        }
+
         boolean success=this.validatorService.validationRolePermission(request,request.getRequestURI(),request.getMethod());
         return success;
     }

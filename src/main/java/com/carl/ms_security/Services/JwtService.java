@@ -14,6 +14,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
 @Service
 public class JwtService {
     @Value("${jwt.secret}")
@@ -39,6 +40,7 @@ public class JwtService {
                 .signWith(secretKey)
                 .compact();
     }
+
     public boolean validateToken(String token) {
         try {
             Jws<Claims> claimsJws = Jwts.parserBuilder()

@@ -9,7 +9,7 @@ import java.util.List;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/role-permissions")
+@RequestMapping("/role-permission")
 public class RolePermissionController {
 
     @Autowired
@@ -38,5 +38,10 @@ public class RolePermissionController {
     @DeleteMapping("{id}")
     public void delete(@PathVariable String id) {
         this.theRolePermissionService.delete(id);
+    }
+
+    @PostMapping("role/{roleId}/permission/{permissionId}")
+    public RolePermission addPermissionToRole(@PathVariable String roleId, @PathVariable String permissionId) {
+        return this.theRolePermissionService.addPermissionToRole(roleId, permissionId);
     }
 }
