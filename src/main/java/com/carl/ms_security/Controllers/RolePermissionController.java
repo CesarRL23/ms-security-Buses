@@ -9,20 +9,30 @@ import java.util.List;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/role-permission")
+@RequestMapping("/role-permissions")
 public class RolePermissionController {
 
     @Autowired
     private RolePermissionService theRolePermissionService;
 
     @GetMapping("")
-    public List<RolePermission> find() {
-        return this.theRolePermissionService.find();
+    public List<RolePermission> findAll() {
+        return this.theRolePermissionService.findAll();
     }
 
-    @PostMapping("role/{roleId}/permission/{permissionId}")
-    public RolePermission create(@PathVariable String roleId, @PathVariable String permissionId) {
-        return this.theRolePermissionService.create(roleId, permissionId);
+    @GetMapping("{id}")
+    public RolePermission findById(@PathVariable String id) {
+        return this.theRolePermissionService.findById(id);
+    }
+
+    @PostMapping
+    public RolePermission create(@RequestBody RolePermission newRolePermission) {
+        return this.theRolePermissionService.create(newRolePermission);
+    }
+
+    @PutMapping("{id}")
+    public RolePermission update(@PathVariable String id, @RequestBody RolePermission newRolePermission) {
+        return this.theRolePermissionService.update(id, newRolePermission);
     }
 
     @DeleteMapping("{id}")
