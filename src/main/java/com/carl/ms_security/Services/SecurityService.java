@@ -47,6 +47,16 @@ public class SecurityService {
         }
     }
 
+    public String loginSocial(User theNewUser) {
+        User theActualUser = this.theUserRepository.getUserByEmail(theNewUser.getEmail());
+        if (theActualUser == null) {
+            // Si el usuario no existe, lo creamos
+            theActualUser = this.theUserRepository.save(theNewUser);
+        }
+        // Para login social (Google), generamos el token directamente (confiamos en el proveedor)
+        return theJwtService.generateToken(theActualUser);
+    }
+
     public String verify2fa(String email, String code) {
         String storedCode = pending2fa.get(email);
         if (storedCode != null && storedCode.equals(code)) {

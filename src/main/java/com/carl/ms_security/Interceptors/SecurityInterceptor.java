@@ -15,13 +15,34 @@ public class SecurityInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response,
-                             Object handler)
-            throws Exception {
-        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+                             Object handler) throws Exception {
+        String method = request.getMethod();
+        String uri = request.getRequestURI();
+
+        System.out.println("DEBUG Interceptor: [" + method + "] " + uri);
+
+        if ("OPTIONS".equalsIgnoreCase(method)) {
             return true;
         }
 
-        boolean success=this.validatorService.validationRolePermission(request,request.getRequestURI(),request.getMethod());
+        // ⚠️ Excepciones públicas permitidas por el interceptor
+        if ("POST".equalsIgnoreCase(method) && uri.contains("/users")) {
+            return true;
+        }
+        if ("GET".equalsIgnoreCase(method) && 
+            (uri.contains("/roles") || uri.contains("/user-role") || 
+             uri.contains("/role-permission") || uri.contains("/permissions") || 
+             uri.contains("/users") || uri.contains("/error"))) {
+            return true;
+        }
+
+        boolean success = this.validatorService.validationRolePermission(request, uri, method);
+        
+        if (!success) {
+            // Log para que el usuario pueda ver en consola qué permiso le falta
+            System.out.println("❌ ACCESO RECHAZADO: [" + method + "] en " + uri);
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No tiene autorización para realizar la acción solicitada");
+        }
         return success;
     }
 

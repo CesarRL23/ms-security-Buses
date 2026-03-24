@@ -24,7 +24,7 @@ public class UserController {
     }
 
     @GetMapping("{id}")
-    public User findById(@PathVariable String id) {
+    public User findById(@PathVariable("id") String id) {
         return this.theUserService.findById(id);
     }
 
@@ -34,18 +34,18 @@ public class UserController {
     }
 
     @PutMapping("{id}")
-    public User update(@PathVariable String id, @RequestBody User newUser) {
+    public User update(@PathVariable("id") String id, @RequestBody User newUser) {
         return this.theUserService.update(id, newUser);
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable String id) {
+    public void delete(@PathVariable("id") String id) {
         this.theUserService.delete(id);
     }
     @PostMapping("{userId}/profile/{profileId}")
     public ResponseEntity<Map<String, String>> addUserProfile(
-            @PathVariable String userId,
-            @PathVariable String profileId) {
+            @PathVariable("userId") String userId,
+            @PathVariable("profileId") String profileId) {
 
         boolean response = this.theUserService.addProfile(userId, profileId);
         if (response) {
@@ -58,8 +58,8 @@ public class UserController {
     }
     @DeleteMapping("{userId}/profile/{profileId}")
     public ResponseEntity<Map<String, String>> deleteUserProfile(
-            @PathVariable String userId,
-            @PathVariable String profileId) {
+            @PathVariable("userId") String userId,
+            @PathVariable("profileId") String profileId) {
 
         boolean response = this.theUserService.removeProfile(userId, profileId);
         if (response) {

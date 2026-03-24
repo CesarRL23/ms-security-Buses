@@ -21,7 +21,7 @@ public class ProfileController {
     }
 
     @GetMapping("{id}")
-    public Profile findById(@PathVariable String id) {
+    public Profile findById(@PathVariable("id") String id) {
         return this.theProfileService.findById(id);
     }
 
@@ -31,12 +31,12 @@ public class ProfileController {
     }
 
     @PutMapping("{id}")
-    public Profile update(@PathVariable String id, @RequestBody Profile newProfile) {
+    public Profile update(@PathVariable("id") String id, @RequestBody Profile newProfile) {
         return this.theProfileService.update(id, newProfile);
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable String id) {
+    public void delete(@PathVariable("id") String id) {
         this.theProfileService.delete(id);
     }
 

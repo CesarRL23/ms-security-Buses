@@ -79,9 +79,13 @@ public class UserService {
         if(actualUser!=null){
             actualUser.setName(newUser.getName());
             actualUser.setEmail(newUser.getEmail());
-            actualUser.setPassword(newUser.getPassword());
+            
+            // Sólo actualiza la contraseña si se envía una nueva
+            if (newUser.getPassword() != null && !newUser.getPassword().isEmpty()) {
+                actualUser.setPassword(theEncryptionService.convertSHA256(newUser.getPassword()));
+            }
+            // Si es null, conservamos la que 'actualUser' ya tenía
 
-            actualUser.setPassword(theEncryptionService.convertSHA256(newUser.getPassword()));
             this.theUserRepository.save(actualUser);
             return actualUser;
         }else{

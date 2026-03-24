@@ -38,14 +38,13 @@ public class ValidatorsService {
             System.out.println("URL "+url+" metodo "+method);
             Permission thePermission=this.thePermissionRepository.getPermission(url,method);
 
-            List<UserRole> roles=this.theUserRoleRepository.getRolesByUser(theUser.getId());
+            List<UserRole> roles=this.theUserRoleRepository.findByUser(theUser);
             int i=0;
             while(i<roles.size() && success==false){
                 UserRole actual=roles.get(i);
                 Role theRole=actual.getRole();
                 if(theRole!=null && thePermission!=null){
-                    System.out.println("Rol "+theRole.getId()+ " Permission "+thePermission.getId());
-                    RolePermission theRolePermission=this.theRolePermissionRepository.getRolePermission(theRole.getId(),thePermission.getId());
+                    RolePermission theRolePermission=this.theRolePermissionRepository.findByRoleAndPermission(theRole,thePermission).orElse(null);
                     if (theRolePermission!=null){
                         success=true;
                     }

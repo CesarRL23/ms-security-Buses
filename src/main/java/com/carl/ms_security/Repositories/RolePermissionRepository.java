@@ -1,14 +1,11 @@
 package com.carl.ms_security.Repositories;
 
+import com.carl.ms_security.Models.Permission;
+import com.carl.ms_security.Models.Role;
 import com.carl.ms_security.Models.RolePermission;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
-
-import java.util.List;
+import java.util.Optional;
 
 public interface RolePermissionRepository extends MongoRepository<RolePermission, String> {
-    @Query("{'role.$id': ObjectId(?0)}")
-    List<RolePermission> getPermissionsByRole(String roleId);
-    @Query("{'role.$id': ObjectId(?0),'permission.$id': ObjectId(?1)}")
-    public RolePermission getRolePermission(String roleId,String permissionId);
+    Optional<RolePermission> findByRoleAndPermission(Role role, Permission permission);
 }

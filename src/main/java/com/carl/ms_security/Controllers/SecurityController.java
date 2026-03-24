@@ -59,4 +59,21 @@ public class SecurityController {
 
         return theResponse;
     }
+
+    @PostMapping("login-social")
+    public HashMap<String,Object> loginSocial(@RequestBody User theNewUser,
+                                              final HttpServletResponse response) throws IOException {
+
+        HashMap<String, Object> theResponse = new HashMap<>();
+
+        String token = this.theSecurityService.loginSocial(theNewUser);
+
+        if (token != null) {
+            theResponse.put("token", token);
+        } else {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        }
+
+        return theResponse;
+    }
 }

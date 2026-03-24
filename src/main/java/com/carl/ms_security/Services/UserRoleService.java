@@ -52,7 +52,11 @@ public class UserRoleService {
     }
 
     public List<UserRole> getRolesByUser(String userId){
-        return this.theUserRoleRepository.getRolesByUser(userId);
+        User user = this.theUserRepository.findById(userId).orElse(null);
+        if (user != null) {
+            return this.theUserRoleRepository.findByUser(user);
+        }
+        return List.of();
     }
 
 }

@@ -21,7 +21,7 @@ public class RolePermissionController {
     }
 
     @GetMapping("{id}")
-    public RolePermission findById(@PathVariable String id) {
+    public RolePermission findById(@PathVariable("id") String id) {
         return this.theRolePermissionService.findById(id);
     }
 
@@ -31,17 +31,17 @@ public class RolePermissionController {
     }
 
     @PutMapping("{id}")
-    public RolePermission update(@PathVariable String id, @RequestBody RolePermission newRolePermission) {
+    public RolePermission update(@PathVariable("id") String id, @RequestBody RolePermission newRolePermission) {
         return this.theRolePermissionService.update(id, newRolePermission);
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable String id) {
+    public void delete(@PathVariable("id") String id) {
         this.theRolePermissionService.delete(id);
     }
 
     @PostMapping("role/{roleId}/permission/{permissionId}")
-    public RolePermission addPermissionToRole(@PathVariable String roleId, @PathVariable String permissionId) {
+    public RolePermission addPermissionToRole(@PathVariable("roleId") String roleId, @PathVariable("permissionId") String permissionId) {
         return this.theRolePermissionService.addPermissionToRole(roleId, permissionId);
     }
 }

@@ -21,7 +21,7 @@ public class PermissionController {
     }
 
     @GetMapping("{id}")
-    public Permission findById(@PathVariable String id) {
+    public Permission findById(@PathVariable("id") String id) {
         return this.thePermissionService.findById(id);
     }
 
@@ -31,12 +31,12 @@ public class PermissionController {
     }
 
     @PutMapping("{id}")
-    public Permission update(@PathVariable String id, @RequestBody Permission newPermission) {
+    public Permission update(@PathVariable("id") String id, @RequestBody Permission newPermission) {
         return this.thePermissionService.update(id, newPermission);
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable String id) {
+    public void delete(@PathVariable("id") String id) {
         this.thePermissionService.delete(id);
     }
 }

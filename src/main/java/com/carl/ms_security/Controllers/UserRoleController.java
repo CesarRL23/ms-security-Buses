@@ -24,14 +24,14 @@ public class UserRoleController {
     }
 
     @GetMapping("user/{userId}")
-    public List<UserRole> getRolesByUser(@PathVariable String userId) {
+    public List<UserRole> getRolesByUser(@PathVariable("userId") String userId) {
         return this.theUserRoleService.getRolesByUser(userId);
     }
     // Asignación del endpoint
     @PostMapping("user/{userId}/role/{roleId}")
     public ResponseEntity<Map<String, String>> addUserRole(
-            @PathVariable String userId,
-            @PathVariable String roleId) {
+            @PathVariable("userId") String userId,
+            @PathVariable("roleId") String roleId) {
 
         boolean response = this.theUserRoleService.addUserRole(userId, roleId);
         if (response) {
@@ -44,7 +44,7 @@ public class UserRoleController {
     }
     @DeleteMapping("{userRoleId}")
     public ResponseEntity<Map<String, String>> removeUserRole(
-            @PathVariable String userRoleId) {
+            @PathVariable("userRoleId") String userRoleId) {
 
         boolean response = this.theUserRoleService.removeUserRole(userRoleId);
         if (response) {

@@ -21,7 +21,7 @@ public class SessionController {
     }
 
     @GetMapping("{id}")
-    public Session findById(@PathVariable String id) {
+    public Session findById(@PathVariable("id") String id) {
         return this.theSessionService.findById(id);
     }
 
@@ -31,12 +31,12 @@ public class SessionController {
     }
 
     @PutMapping("{id}")
-    public Session update(@PathVariable String id, @RequestBody Session newSession) {
+    public Session update(@PathVariable("id") String id, @RequestBody Session newSession) {
         return this.theSessionService.update(id, newSession);
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable String id) {
+    public void delete(@PathVariable("id") String id) {
         this.theSessionService.delete(id);
     }
 
