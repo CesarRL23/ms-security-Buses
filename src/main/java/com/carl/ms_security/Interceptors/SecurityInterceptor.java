@@ -36,6 +36,10 @@ public class SecurityInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        if (this.validatorService.isAdmin(request)) {
+            return true;
+        }
+
         boolean success = this.validatorService.validationRolePermission(request, uri, method);
         
         if (!success) {

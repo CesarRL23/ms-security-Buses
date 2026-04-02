@@ -27,6 +27,19 @@ public class ValidatorsService {
     private UserRoleRepository theUserRoleRepository;
 
     private static final String BEARER_PREFIX = "Bearer ";
+    public boolean isAdmin(HttpServletRequest request) {
+        User user = this.getUser(request);
+        if (user == null) return false;
+        List<UserRole> roles = this.theUserRoleRepository.findByUser(user);
+        for (UserRole ur : roles) {
+            Role role = ur.getRole();
+            if (role != null && "ADMIN".equalsIgnoreCase(role.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean  validationRolePermission(HttpServletRequest request,
                                              String url,
                                              String method){
