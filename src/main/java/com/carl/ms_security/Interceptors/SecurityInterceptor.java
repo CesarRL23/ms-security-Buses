@@ -1,5 +1,6 @@
 package com.carl.ms_security.Interceptors;
 
+import com.carl.ms_security.Models.User;
 import com.carl.ms_security.Services.ValidatorsService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,14 +26,24 @@ public class SecurityInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        // ⚠️ Excepciones públicas permitidas por el interceptor
+        // ⚠️ Excepción pública permitida sin token para registro
         if ("POST".equalsIgnoreCase(method) && uri.contains("/users")) {
             return true;
         }
+        
+        // Verificar que el usuario tenga un token válido emitido (autenticación)
+        User user = this.validatorService.getUser(request);
+        if (user == null) {
+            System.out.println("❌ ACCESO RECHAZADO: No hay token valido para [" + method + "] en " + uri);
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token invalido o ausente");
+            return false;
+        }
+
+        // Estas rutas son necesarias solo leer para funcionalidades base del frontend (pero requiere estar logueado)
         if ("GET".equalsIgnoreCase(method) && 
             (uri.contains("/roles") || uri.contains("/user-role") || 
              uri.contains("/role-permission") || uri.contains("/permissions") || 
-             uri.contains("/users") || uri.contains("/error"))) {
+             uri.contains("/error"))) {
             return true;
         }
 
