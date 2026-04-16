@@ -19,22 +19,34 @@ public class SecurityController {
     private SecurityService theSecurityService;
 
     @PostMapping("login")
-    public HashMap<String,Object> login(@RequestBody User theNewUser,
+    public HashMap<String,Object> login(@RequestBody Map<String, Object> payload,
                                         final HttpServletResponse response) throws IOException {
 
         HashMap<String, Object> theResponse = new HashMap<>();
+        
+        String email = (String) payload.get("email");
+        String password = (String) payload.get("password");
+        String captchaToken = (String) payload.get("captchaToken");
 
-        String result = this.theSecurityService.login(theNewUser);
+        User theNewUser = new User();
+        theNewUser.setEmail(email);
+        theNewUser.setPassword(password);
+
+        String result = this.theSecurityService.login(theNewUser, captchaToken);
 
         if (result != null) {
             if (result.equals("2FA_REQUIRED")) {
                 theResponse.put("message", "2FA required");
                 theResponse.put("email", theNewUser.getEmail());
+            } else if (result.equals("CAPTCHA_INVALID")) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Verificación ReCAPTCHA fallida");
+                return null;
             } else {
                 theResponse.put("token", result);
             }
         } else {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Credenciales inválidas");
+            return null;
         }
 
         return theResponse;

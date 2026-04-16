@@ -33,7 +33,34 @@ public class SecurityService {
     private final Map<String, String> pending2fa = new HashMap<>(); // email -> code
     private final Map<String, String> pendingRecovery = new HashMap<>(); // email -> code
 
-    public String login(User theNewUser){
+    private final String reCaptchaSecret = "6LeO8rosAAAAAMh7X0dh07W3CdJ-IUYtmMpO69og";
+    private final String reCaptchaUrl = "https://www.google.com/recaptcha/api/siteverify";
+
+    public boolean verifyCaptcha(String token) {
+        if (token == null || token.isEmpty()) return false;
+        
+        Map<String, String> body = new HashMap<>();
+        body.put("secret", reCaptchaSecret);
+        body.put("response", token);
+
+        try {
+            ResponseEntity<Map> response = restTemplate.postForEntity(
+                reCaptchaUrl + "?secret=" + reCaptchaSecret + "&response=" + token, 
+                null, 
+                Map.class
+            );
+            Map<String, Object> responseBody = response.getBody();
+            return responseBody != null && (Boolean) responseBody.get("success");
+        } catch (Exception e) {
+            System.err.println("Error verifying ReCAPTCHA: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public String login(User theNewUser, String captchaToken){
+        if (!verifyCaptcha(captchaToken)) {
+            return "CAPTCHA_INVALID";
+        }
         User theActualUser = this.theUserRepository.getUserByEmail(theNewUser.getEmail());
         if(theActualUser != null &&
                 theActualUser.getPassword().equals(theEncryptionService.convertSHA256(theNewUser.getPassword()))){
