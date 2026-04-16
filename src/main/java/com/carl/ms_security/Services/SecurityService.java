@@ -31,6 +31,7 @@ public class SecurityService {
     private final RestTemplate restTemplate = new RestTemplate();
     private final String notificationsUrl = "http://localhost:5000/send-email"; // URL de ms-notifications
     private final Map<String, String> pending2fa = new HashMap<>(); // email -> code
+    private final Map<String, String> pendingRecovery = new HashMap<>(); // email -> code
 
     public String login(User theNewUser){
         User theActualUser = this.theUserRepository.getUserByEmail(theNewUser.getEmail());
@@ -89,6 +90,51 @@ public class SecurityService {
             System.out.println("Email sent: " + response.getStatusCode());
         } catch (Exception e) {
             System.err.println("Error sending email: " + e.getMessage());
+        }
+    }
+
+    public boolean forgotPassword(String email) {
+        User user = theUserRepository.getUserByEmail(email);
+        if (user != null) {
+            String code = generate2faCode(); // reusamos el generador de codigo numerico
+            pendingRecovery.put(email, code);
+            sendRecoveryEmail(email, code);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean resetPassword(String email, String code, String newPassword) {
+        String storedCode = pendingRecovery.get(email);
+        if (storedCode != null && storedCode.equals(code)) {
+            User user = theUserRepository.getUserByEmail(email);
+            if (user != null) {
+                user.setPassword(theEncryptionService.convertSHA256(newPassword));
+                theUserRepository.save(user);
+                pendingRecovery.remove(email);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void sendRecoveryEmail(String email, String code) {
+        Map<String, String> payload = new HashMap<>();
+        payload.put("sender", "tuemail@gmail.com"); 
+        payload.put("to", email);
+        payload.put("subject", "Código de Recuperación de Contraseña");
+        payload.put("message", "Su código para recuperar la contraseña es: " + code + "\n\nPor favor, introduzca este código en la página para restablecer su contraseña.");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<Map<String, String>> entity = new HttpEntity<>(payload, headers);
+
+        try {
+            ResponseEntity<String> response = restTemplate.postForEntity(notificationsUrl, entity, String.class);
+            System.out.println("Email recovery sent: " + response.getStatusCode());
+        } catch (Exception e) {
+            System.err.println("Error sending recovery email: " + e.getMessage());
         }
     }
 }

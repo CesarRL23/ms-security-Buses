@@ -76,4 +76,42 @@ public class SecurityController {
 
         return theResponse;
     }
+
+    @PostMapping("forgot-password")
+    public HashMap<String,Object> forgotPassword(@RequestBody Map<String, String> payload,
+                                                 final HttpServletResponse response) throws IOException {
+
+        HashMap<String, Object> theResponse = new HashMap<>();
+        String email = payload.get("email");
+
+        boolean result = this.theSecurityService.forgotPassword(email);
+
+        if (result) {
+            theResponse.put("message", "Recovery email sent");
+        } else {
+            theResponse.put("message", "If the email exists, a recovery email was sent.");
+        }
+
+        return theResponse;
+    }
+
+    @PostMapping("reset-password")
+    public HashMap<String,Object> resetPassword(@RequestBody Map<String, String> payload,
+                                                 final HttpServletResponse response) throws IOException {
+
+        HashMap<String, Object> theResponse = new HashMap<>();
+        String email = payload.get("email");
+        String code = payload.get("code");
+        String newPassword = payload.get("newPassword");
+
+        boolean result = this.theSecurityService.resetPassword(email, code, newPassword);
+
+        if (result) {
+            theResponse.put("message", "Contraseña actualizada exitosamente");
+        } else {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Código o email inválido");
+        }
+
+        return theResponse;
+    }
 }
