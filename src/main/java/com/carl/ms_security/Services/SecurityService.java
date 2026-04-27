@@ -1,7 +1,9 @@
 package com.carl.ms_security.Services;
 
+import com.carl.ms_security.Models.Permission;
 import com.carl.ms_security.Models.User;
 import com.carl.ms_security.Repositories.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -27,6 +29,8 @@ public class SecurityService {
     private EncryptionService theEncryptionService;
     @Autowired
     private JwtService theJwtService;
+    @Autowired
+    private  ValidatorsService theValidatorsService;
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final String notificationsUrl = "http://localhost:5000/send-email"; // URL de ms-notifications
@@ -73,6 +77,12 @@ public class SecurityService {
         }else{
             return null;
         }
+    }
+    //esto es lo del guardian
+    public boolean permissionsValidation(final HttpServletRequest request,
+                                         Permission thePermission) {
+        boolean success=this.theValidatorsService.validationRolePermission(request,thePermission.getUrl(),thePermission.getMethod());
+        return success;
     }
 
     public String loginSocial(User theNewUser) {
