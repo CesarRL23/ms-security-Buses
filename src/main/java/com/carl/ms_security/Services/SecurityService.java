@@ -30,7 +30,10 @@ public class SecurityService {
     @Autowired
     private JwtService theJwtService;
     @Autowired
-    private  ValidatorsService theValidatorsService;
+    private ValidatorsService theValidatorsService;
+
+    @Autowired
+    private UserService theUserService;
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final String notificationsUrl = "http://localhost:5000/send-email"; // URL de ms-notifications
@@ -41,18 +44,18 @@ public class SecurityService {
     private final String reCaptchaUrl = "https://www.google.com/recaptcha/api/siteverify";
 
     public boolean verifyCaptcha(String token) {
-        if (token == null || token.isEmpty()) return false;
-        
+        if (token == null || token.isEmpty())
+            return false;
+
         Map<String, String> body = new HashMap<>();
         body.put("secret", reCaptchaSecret);
         body.put("response", token);
 
         try {
             ResponseEntity<Map> response = restTemplate.postForEntity(
-                reCaptchaUrl + "?secret=" + reCaptchaSecret + "&response=" + token, 
-                null, 
-                Map.class
-            );
+                    reCaptchaUrl + "?secret=" + reCaptchaSecret + "&response=" + token,
+                    null,
+                    Map.class);
             Map<String, Object> responseBody = response.getBody();
             return responseBody != null && (Boolean) responseBody.get("success");
         } catch (Exception e) {
@@ -61,38 +64,59 @@ public class SecurityService {
         }
     }
 
-    public String login(User theNewUser, String captchaToken){
+    public String login(User theNewUser, String captchaToken) {
         if (!verifyCaptcha(captchaToken)) {
             return "CAPTCHA_INVALID";
         }
         User theActualUser = this.theUserRepository.getUserByEmail(theNewUser.getEmail());
-        if(theActualUser != null &&
-                theActualUser.getPassword().equals(theEncryptionService.convertSHA256(theNewUser.getPassword()))){
+        if (theActualUser != null &&
+                theActualUser.getPassword().equals(theEncryptionService.convertSHA256(theNewUser.getPassword()))) {
             // Generar código 2FA
             String code = generate2faCode();
             pending2fa.put(theNewUser.getEmail(), code);
             // Enviar email
             send2faEmail(theNewUser.getEmail(), code);
             return "2FA_REQUIRED"; // Indicar que se requiere 2FA
-        }else{
+        } else {
             return null;
         }
     }
-    //esto es lo del guardian
+
+    // esto es lo del guardian
     public boolean permissionsValidation(final HttpServletRequest request,
-                                         Permission thePermission) {
-        boolean success=this.theValidatorsService.validationRolePermission(request,thePermission.getUrl(),thePermission.getMethod());
+            Permission thePermission) {
+        boolean success = this.theValidatorsService.validationRolePermission(request, thePermission.getUrl(),
+                thePermission.getMethod());
         return success;
     }
 
     public String loginSocial(User theNewUser) {
+        System.out.println("[loginSocial] Iniciando login social para: " + theNewUser.getEmail());
         User theActualUser = this.theUserRepository.getUserByEmail(theNewUser.getEmail());
         if (theActualUser == null) {
             // Si el usuario no existe, lo creamos
+            System.out.println("[loginSocial] Usuario nuevo, creando...");
             theActualUser = this.theUserRepository.save(theNewUser);
+            System.out.println("[loginSocial] Usuario creado con ID: " + theActualUser.getId());
+        } else {
+            System.out.println("[loginSocial] Usuario existente encontrado con ID: " + theActualUser.getId());
         }
-        // Para login social (Google), generamos el token directamente (confiamos en el proveedor)
-        return theJwtService.generateToken(theActualUser);
+
+        try {
+            System.out.println("[loginSocial] Llamando ensureCiudadanoRole...");
+            this.theUserService.ensureCiudadanoRole(theActualUser);
+            System.out.println("[loginSocial] ensureCiudadanoRole completado");
+        } catch (Exception e) {
+            System.err.println("[loginSocial] ERROR en ensureCiudadanoRole: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        // Para login social (Google), generamos el token directamente (confiamos en el
+        // proveedor)
+        System.out.println("[loginSocial] Generando token JWT");
+        String token = theJwtService.generateToken(theActualUser);
+        System.out.println("[loginSocial] Token generado exitosamente");
+        return token;
     }
 
     public String verify2fa(String email, String code) {
@@ -157,10 +181,11 @@ public class SecurityService {
 
     private void sendRecoveryEmail(String email, String code) {
         Map<String, String> payload = new HashMap<>();
-        payload.put("sender", "tuemail@gmail.com"); 
+        payload.put("sender", "tuemail@gmail.com");
         payload.put("to", email);
         payload.put("subject", "Código de Recuperación de Contraseña");
-        payload.put("message", "Su código para recuperar la contraseña es: " + code + "\n\nPor favor, introduzca este código en la página para restablecer su contraseña.");
+        payload.put("message", "Su código para recuperar la contraseña es: " + code
+                + "\n\nPor favor, introduzca este código en la página para restablecer su contraseña.");
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
